@@ -1,0 +1,43 @@
+---
+
+- name: install ES dependencies
+  apt: pkg={{ item }} state=present update_cache=true cache_valid_time=3600
+  with_items: [openjdk-7-jre-headless]
+  sudo: yes
+
+- name: Check if ES has already been installed
+  stat: path=/etc/elasticsearch-installed
+  register: elasticsearch_installed
+
+- name: Check if we've already downloaded the DEB
+  stat: path=/tmp/elasticsearch-{{ elasticsearch_version }}.deb
+  register: elasticsearch_downloaded
+
+- name: Download ES deb
+  get_url: url=https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb dest=/tmp/elasticsearch-{{ elasticsearch_version }}.deb
+  sudo: yes
+  when: elasticsearch_installed.stat.exists != true and elasticsearch_downloaded.stat.exists != true
+
+- name: Install ES deb
+  command: dpkg -i /tmp/elasticsearch-{{ elasticsearch_version }}.deb
+  sudo: yes
+  when: elasticsearch_installed.stat.exists != true
+
+- name: Start ES
+  command: service elasticsearch start
+  sudo: yes
+  when: elasticsearch_installed.stat.exists != true
+
+- name: Mark ES as installed
+  file: path=/etc/elasticsearch-installed state=touch
+  sudo: yes
+  when: elasticsearch_installed.stat.exists != true
+
+- name: Check if head plugin path exists
+  stat: path=/usr/share/elasticsearch/plugins/head
+  register: head_plugin_path
+
+- name: Install ES head plugin
+  command: /usr/share/elasticsearch/bin/plugin --install mobz/elasticsearch-head
+  sudo: yes
+  when: head_plugin_path.stat.exists != true

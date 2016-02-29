@@ -1,0 +1,16 @@
+---
+
+galaxy_info:
+  author: EDITED devs
+  description: A role to install elasticsearch on development machines.
+  company: EDITED
+  license: MIT
+  min_ansible_version: 1.7
+  platforms:
+  - name: Ubuntu
+    versions:
+    - precise
+    - trusty
+  categories:
+  - development
+dependencies: []
