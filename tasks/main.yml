@@ -23,11 +23,6 @@
   sudo: yes
   when: elasticsearch_installed.stat.exists != true
 
-- name: Start ES
-  command: service elasticsearch start
-  sudo: yes
-  when: elasticsearch_installed.stat.exists != true
-
 - name: Mark ES as installed
   file: path=/etc/elasticsearch-installed state=touch
   sudo: yes
@@ -41,3 +36,10 @@
   command: /usr/share/elasticsearch/bin/plugin --install mobz/elasticsearch-head
   sudo: yes
   when: head_plugin_path.stat.exists != true
+
+- name: Start ES
+  service: >
+    name=elasticsearch
+    state=started
+    enabled=yes
+  sudo: yes
