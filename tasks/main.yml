@@ -21,9 +21,9 @@
   when: not elasticsearch_installed.stat.exists
 
 - name: Install ES plugins
-  shell: /usr/share/elasticsearch/bin/plugin {% if elasticsearch_file_name|get_major_version == 1 %}--{% endif %}remove {{ item }} && /usr/share/elasticsearch/bin/plugin {% if elasticsearch_file_name|get_major_version == 1 %}--{% endif %}install {{ item }}
-  when: head_plugin_path.stat.exists != true
+  shell: /usr/share/elasticsearch/bin/plugin {% if elasticsearch_file_name|get_major_version == 1 %}--{% endif %}install {{ item }}
   with_items: "{{ plugins_to_install }}"
+  ignore_errors: True
 
 - name: write Elasticsearch config
   copy: src={{ elasticsearch_config_file }} dest=/etc/elasticsearch/elasticsearch.yml
