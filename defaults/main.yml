@@ -1,3 +1,8 @@
 ---
 
-elasticsearch_version: 1.7.4
+elasticsearch_version: 2.3.0
+elasticsearch_file_name: elasticsearch-{{ elasticsearch_version }}.deb
+elasticsearch_base_url: https://download.elasticsearch.org/elasticsearch/elasticsearch
+elasticsearch_config_file: false
+
+plugins_to_install: ["mobz/elasticsearch-head"]

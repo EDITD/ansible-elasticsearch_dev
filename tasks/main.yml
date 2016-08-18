@@ -3,43 +3,39 @@
 - name: install ES dependencies
   apt: pkg={{ item }} state=present update_cache=true cache_valid_time=3600
   with_items: [openjdk-7-jre-headless]
-  sudo: yes
-
-- name: Check if ES has already been installed
-  stat: path=/etc/elasticsearch-installed
-  register: elasticsearch_installed
 
 - name: Check if we've already downloaded the DEB
-  stat: path=/tmp/elasticsearch-{{ elasticsearch_version }}.deb
+  stat: path=/tmp/{{ elasticsearch_file_name }}
   register: elasticsearch_downloaded
 
 - name: Download ES deb
-  get_url: url=https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb dest=/tmp/elasticsearch-{{ elasticsearch_version }}.deb
-  sudo: yes
-  when: elasticsearch_installed.stat.exists != true and elasticsearch_downloaded.stat.exists != true
+  get_url: url={{ elasticsearch_base_url }}/{{ elasticsearch_file_name }} dest=/tmp/{{ elasticsearch_file_name }}
+  when: elasticsearch_downloaded.stat.exists != true
 
-- name: Install ES deb
-  command: dpkg -i /tmp/elasticsearch-{{ elasticsearch_version }}.deb
-  sudo: yes
-  when: elasticsearch_installed.stat.exists != true
-
-- name: Mark ES as installed
-  file: path=/etc/elasticsearch-installed state=touch
-  sudo: yes
-  when: elasticsearch_installed.stat.exists != true
+- name: Install elasticsearch
+  apt: deb=/tmp/{{ elasticsearch_file_name }} state=present force=yes
 
 - name: Check if head plugin path exists
   stat: path=/usr/share/elasticsearch/plugins/head
   register: head_plugin_path
 
 - name: Install ES head plugin
-  command: /usr/share/elasticsearch/bin/plugin --install mobz/elasticsearch-head
-  sudo: yes
+  shell: /usr/share/elasticsearch/bin/plugin {% if elasticsearch_file_name|get_major_version == 1 %}--{% endif %}install {{ item }}
   when: head_plugin_path.stat.exists != true
+  with_items: "{{ plugins_to_install }}"
 
-- name: Start ES
+- name: write Elasticsearch config
+  copy: src={{ elasticsearch_config_file }} dest=/etc/elasticsearch/elasticsearch.yml
+  when: elasticsearch_config_file != false
+
+- name: Make ES listen on all interfaces
+  lineinfile: 'dest=/etc/elasticsearch/elasticsearch.yml line="network.host: 0.0.0.0" regexp=^network.host'
+
+- name: Restart ES
   service: >
     name=elasticsearch
-    state=started
+    state=restarted
     enabled=yes
-  sudo: yes
+
+- name: wait for Elasticsearch to actually be ready
+  wait_for: host=127.0.0.1 port=9200 delay=5 timeout=60
