@@ -19,7 +19,7 @@
   stat: path=/usr/share/elasticsearch/plugins/head
   register: head_plugin_path
 
-- name: Install ES head plugin
+- name: Install ES plugins
   shell: /usr/share/elasticsearch/bin/plugin {% if elasticsearch_file_name|get_major_version == 1 %}--{% endif %}install {{ item }}
   when: head_plugin_path.stat.exists != true
   with_items: "{{ plugins_to_install }}"
