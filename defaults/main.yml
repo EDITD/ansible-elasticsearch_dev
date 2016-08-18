@@ -4,5 +4,6 @@ elasticsearch_version: 2.3.0
 elasticsearch_file_name: elasticsearch-{{ elasticsearch_version }}.deb
 elasticsearch_base_url: https://download.elasticsearch.org/elasticsearch/elasticsearch
 elasticsearch_config_file: false
+elasticsearch_listen_on_all_interfaces: true
 
 plugins_to_install: ["mobz/elasticsearch-head"]
