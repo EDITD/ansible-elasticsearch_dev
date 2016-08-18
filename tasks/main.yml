@@ -26,7 +26,7 @@
 
 - name: write Elasticsearch config
   copy: src={{ elasticsearch_config_file }} dest=/etc/elasticsearch/elasticsearch.yml
-  when: elasticsearch_config_file
+  when: elasticsearch_config_file != false
 
 - name: Make ES listen on all interfaces
   lineinfile: 'dest=/etc/elasticsearch/elasticsearch.yml line="network.host: 0.0.0.0" regexp=^network.host'
