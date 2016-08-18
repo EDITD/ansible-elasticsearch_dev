@@ -35,6 +35,7 @@
 
 - name: Make ES listen on all interfaces
   lineinfile: 'dest=/etc/elasticsearch/elasticsearch.yml line="network.host: 0.0.0.0" regexp=^network.host'
+  when: ansible_product_name == "VirtualBox"
 
 - name: Restart ES
   service: >
