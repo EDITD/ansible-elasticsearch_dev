@@ -1,7 +1,8 @@
 ---
 
 - name: install ES dependencies
-  apt: pkg=openjdk-{{ ansible_distribution_version|get_openjdk_version }}-jre-headless state=present update_cache=true cache_valid_time=3600
+  apt: pkg={{ item }} state=present update_cache=true cache_valid_time=3600
+  with_items: [default-jre-headless]
 
 - name: Check if we've already downloaded the DEB
   stat: path=/tmp/{{ elasticsearch_file_name }}
