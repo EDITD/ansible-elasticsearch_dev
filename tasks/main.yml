@@ -24,6 +24,7 @@
   shell: /usr/share/elasticsearch/bin/plugin {% if elasticsearch_file_name|get_major_version == 1 %}--{% endif %}install {{ item }}
   with_items: "{{ plugins_to_install }}"
   register: plugin_response
+  when: elasticsearch_file_name|get_major_version < 5
   failed_when: "'ERROR' in plugin_response.stdout and 'already exists' not in plugin_response.stdout"
 
 - name: write Elasticsearch config
