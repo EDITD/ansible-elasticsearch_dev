@@ -13,7 +13,7 @@
   register: elasticsearch_installed
 
 - name: Download ES deb
-  get_url: url={{ elasticsearch_base_url }}/{{ elasticsearch_file_name }} dest=/tmp/{{ elasticsearch_file_name }}
+  get_url: url={{ elasticsearch_file_name|get_major_version|get_elasticsearch_base_url }}/{{ elasticsearch_file_name }} dest=/tmp/{{ elasticsearch_file_name }}
   when: not elasticsearch_downloaded.stat.exists and not elasticsearch_installed.stat.exists
 
 - name: Install elasticsearch
