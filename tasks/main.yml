@@ -2,7 +2,7 @@
 
 - name: install ES dependencies
   apt: pkg={{ item }} state=present update_cache=true cache_valid_time=3600
-  with_items: [openjdk-7-jre-headless]
+  with_items: [default-jre-headless]
 
 - name: Check if we've already downloaded the DEB
   stat: path=/tmp/{{ elasticsearch_file_name }}
@@ -13,7 +13,7 @@
   register: elasticsearch_installed
 
 - name: Download ES deb
-  get_url: url={{ elasticsearch_base_url }}/{{ elasticsearch_file_name }} dest=/tmp/{{ elasticsearch_file_name }}
+  get_url: url={{ elasticsearch_file_name|get_major_version|get_elasticsearch_base_url }}/{{ elasticsearch_file_name }} dest=/tmp/{{ elasticsearch_file_name }}
   when: not elasticsearch_downloaded.stat.exists and not elasticsearch_installed.stat.exists
 
 - name: Install elasticsearch
@@ -24,6 +24,7 @@
   shell: /usr/share/elasticsearch/bin/plugin {% if elasticsearch_file_name|get_major_version == 1 %}--{% endif %}install {{ item }}
   with_items: "{{ plugins_to_install }}"
   register: plugin_response
+  when: elasticsearch_file_name|get_major_version < 5
   failed_when: "'ERROR' in plugin_response.stdout and 'already exists' not in plugin_response.stdout"
 
 - name: write Elasticsearch config
