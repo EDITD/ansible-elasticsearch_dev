@@ -27,6 +27,11 @@
   when: elasticsearch_file_name|get_major_version < 5
   failed_when: "'ERROR' in plugin_response.stdout and 'already exists' not in plugin_response.stdout"
 
+- name: Install mapper-size plugin on ES5
+  shell: /usr/share/elasticsearch/bin/elasticsearch-plugin install mapper-size
+  become: yes
+  when: elasticsearch_file_name|get_major_version == 5
+
 - name: write Elasticsearch config
   copy: src={{ elasticsearch_config_file }} dest=/etc/elasticsearch/elasticsearch.yml
   when: elasticsearch_config_file != false
