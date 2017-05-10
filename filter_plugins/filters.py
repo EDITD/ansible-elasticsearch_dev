@@ -8,9 +8,19 @@ def get_elasticsearch_base_url(version):
     return 'https://artifacts.elastic.co/downloads/elasticsearch'
 
 
+def get_elasticsearch_plugin_install_command(version):
+    if version == 1:
+        return '/usr/share/elasticsearch/bin/plugin --install'
+    elif version == 2:
+        return '/usr/share/elasticsearch/bin/plugin install'
+    else:
+        return '/usr/share/elasticsearch/bin/elasticsearch-plugin install'
+
+
 class FilterModule(object):
     def filters(self):
         return {
             'get_major_version': get_major_version,
             'get_elasticsearch_base_url': get_elasticsearch_base_url,
+            'plugin_install_command': get_elasticsearch_plugin_install_command,
         }
