@@ -22,7 +22,7 @@
 
 - name: Install ES plugins
   shell: "{{ elasticsearch_file_name|get_major_version|plugin_install_command }} {{ item }}"
-  with_items: "{{ plugins_to_install }}"
+  with_items: "{{ elasticsearch_plugins_to_install }}"
   register: plugin_response
   failed_when: "'ERROR' in plugin_response.stdout and 'already exists' not in plugin_response.stdout"
 
