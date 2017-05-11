@@ -35,7 +35,5 @@ elasticsearch_listen_on_all_interfaces: false
 Finally, the head plugin is installed by default - to override this, you can use
 
 ```
-plugins_to_install: ["mobz/elasticsearch-head", "some_other_ES_plugin"]
+elasticsearch_plugins_to_install: ["mobz/elasticsearch-head", "some_other_ES_plugin"]
 ```
-
-
