@@ -27,7 +27,7 @@
   failed_when: "'ERROR' in plugin_response.stdout and 'already exists' not in plugin_response.stdout"
 
 - name: write Elasticsearch config
-  copy: src={{ elasticsearch_config_file }} dest=/etc/elasticsearch/elasticsearch.yml
+  template: src={{ elasticsearch_config_file }} dest=/etc/elasticsearch/elasticsearch.yml
   when: elasticsearch_config_file != false
 
 - name: Make ES listen on all interfaces
