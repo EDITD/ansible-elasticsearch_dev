@@ -20,7 +20,17 @@
   apt: deb=/tmp/{{ elasticsearch_file_name }} state=present force=yes
   when: not elasticsearch_installed.stat.exists
 
-- name: Install ES plugins
+- name: Check which plugins are installed
+  shell: {{ elasticsearch_file_name|get_major_version|plugin_list_command}}
+  register: plugins
+  when: elasticsearch_file_name|get_major_version >= 5
+
+- name: Uninstall plugins
+  shell: {{ elasticsearch_file_name|get_major_version|plugin_remove_command }} {{ item }}
+  with_items: "{{ elasticsearch_plugins_to_install }}"
+  when: elasticsearch_plugins_to_install is defined and item in plugins.stdout_lines
+
+- name: Install plugins
   shell: "{{ elasticsearch_file_name|get_major_version|plugin_install_command }} {{ item }}"
   with_items: "{{ elasticsearch_plugins_to_install }}"
   register: plugin_response
