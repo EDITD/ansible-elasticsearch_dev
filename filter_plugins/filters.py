@@ -35,5 +35,6 @@ class FilterModule(object):
             'get_major_version': get_major_version,
             'get_elasticsearch_base_url': get_elasticsearch_base_url,
             'plugin_install_command': get_elasticsearch_plugin_install_command,
+            'plugin_list_command': get_elasticsearch_plugin_list_command,
             'plugin_remove_command': get_elasticsearch_plugin_remove_command,
         }
