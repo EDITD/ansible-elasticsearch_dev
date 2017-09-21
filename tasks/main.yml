@@ -21,7 +21,7 @@
   when: not elasticsearch_installed.stat.exists
 
 - name: Check which plugins are installed
-  shell: {{ elasticsearch_file_name|get_major_version|plugin_list_command}}
+  shell: "{{ elasticsearch_file_name|get_major_version|plugin_list_command}}"
   register: plugins
   when: elasticsearch_file_name|get_major_version >= 5
 
