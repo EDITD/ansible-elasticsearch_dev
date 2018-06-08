@@ -44,6 +44,10 @@
   lineinfile: 'dest=/etc/elasticsearch/elasticsearch.yml line="network.host: 0.0.0.0" regexp=^network.host'
   when: elasticsearch_listen_on_all_interfaces
 
+- name: Create folder for data
+  file: state=directory owner=elasticsearch group=elasticsearch path=/usr/share/elasticsearch/data
+  become: yes
+
 - name: Restart ES
   service: >
     name=elasticsearch
