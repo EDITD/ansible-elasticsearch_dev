@@ -1,6 +1,6 @@
 ---
 
-elasticsearch_version: 2.3.0
+elasticsearch_version: 6.2.4
 elasticsearch_file_name: elasticsearch-{{ elasticsearch_version }}.deb
 elasticsearch_config_file: false
 elasticsearch_listen_on_all_interfaces: true

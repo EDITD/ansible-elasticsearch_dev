@@ -10,10 +10,10 @@ roles:
 - EDITD.elasticsearch_dev
 ```
 
-The default ES version to install is `2.3.0`. To override, use
+The default ES version to install is `6.2.4`. To override, use
 
 ```
-elasticsearch_version: 2.3.0
+elasticsearch_version: 6.2.4
 ```
 
 By default, no ES config is written - it can be set by using
