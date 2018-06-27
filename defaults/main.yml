@@ -5,4 +5,4 @@ elasticsearch_file_name: elasticsearch-{{ elasticsearch_version }}.deb
 elasticsearch_config_file: false
 elasticsearch_listen_on_all_interfaces: true
 
-elasticsearch_plugins_to_install: ["mobz/elasticsearch-head"]
+elasticsearch_plugins_to_install: ["mapper-size"]
